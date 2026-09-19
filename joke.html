@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Joke Generator</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background: linear-gradient(135deg, #0f0f0f, #1c1c1c);
+      color: #f0f0f0;
+      text-align: center;
+      padding-top: 60px;
+      min-height: 100vh;
+      margin: 0;
+    }
+    h1 { font-size: 2.2em; }
+    #joke {
+      max-width: 500px;
+      margin: 40px auto;
+      font-size: 1.4em;
+      background: #1e1e1e;
+      border: 2px solid #444;
+      border-radius: 15px;
+      padding: 30px;
+      min-height: 80px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    button {
+      font-size: 1.2em;
+      background: #1e1e1e;
+      border: 2px solid #f7b733;
+      color: white;
+      border-radius: 10px;
+      padding: 12px 25px;
+      cursor: pointer;
+      transition: 0.2s;
+    }
+    button:hover {
+      background: #f7b733;
+      color: #111;
+    }
+    a {
+      display: block;
+      margin-top: 30px;
+      color: #999;
+    }
+    a:hover {
+      color: #f7b733;
+    }
+  </style>
+</head>
+<body>
+  <h1>😂 Joke Generator</h1>
+  <p>Click for a random joke</p>
+
+  <div id="joke">Ready when you are!</div>
+  <button onclick="tellJoke()">Tell me a joke</button>
+
+  <a href="index.html">← Back to menu</a>
+
+  <script>
+    const jokes = [
+      "Why don't scientists trust atoms? Because they make up everything!",
+      "I told my computer I needed a break, and it said no problem — it froze immediately.",
+      "Why do programmers prefer dark mode? Because light attracts bugs.",
+      "I'm reading a book on anti-gravity. It's impossible to put down!",
+      "Why did the scarecrow win an award? Because he was outstanding in his field.",
+      "I used to be a banker, but I lost interest.",
+      "Why don't skeletons fight each other? They don't have the guts.",
+      "I would tell you a joke about pizza, but it's a little cheesy.",
+      "Why did the developer go broke? Because he used up all his cache.",
+      "Parallel lines have so much in common. It's a shame they'll never meet."
+    ];
+
+    function tellJoke() {
+      const random = jokes[Math.floor(Math.random() * jokes.length)];
+      document.getElementById('joke').innerText = random;
+    }
+  </script>
+</body>
+</html>
