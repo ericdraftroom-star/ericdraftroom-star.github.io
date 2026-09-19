@@ -77,7 +77,7 @@
 </head>
 <body>
   <h1>😂 Joke Generator</h1>
-  <p>Pick a category, or search for a keyword</p>
+  <p>Pick a category, or type a keyword — either stays active until you change it</p>
 
   <div class="categories">
     <button class="cat active" data-cat="Any" onclick="setCategory('Any', this)">🎲 Any</button>
@@ -90,11 +90,11 @@
 
   <div class="search">
     <input type="text" id="keyword" placeholder="Search a word e.g. cat, school">
-    <button onclick="tellJoke(true)">Search</button>
+    <button onclick="tellJoke()">Search</button>
   </div>
 
   <div id="joke">Ready when you are!</div>
-  <button onclick="tellJoke(false)" style="margin-top:10px; padding:12px 25px; font-size:1.1em; background:#1e1e1e; border:2px solid #f7b733; color:white; border-radius:10px; cursor:pointer;">🎲 Random Joke</button>
+  <button onclick="tellJoke()" style="margin-top:10px; padding:12px 25px; font-size:1.1em; background:#1e1e1e; border:2px solid #f7b733; color:white; border-radius:10px; cursor:pointer;">🎲 Random Joke</button>
 
   <a href="index.html">← Back to menu</a>
 
@@ -105,15 +105,15 @@
       currentCategory = cat;
       document.querySelectorAll('.cat').forEach(b => b.classList.remove('active'));
       btn.classList.add('active');
-      tellJoke(false);
+      tellJoke();
     }
 
-    async function tellJoke(useSearch) {
+    async function tellJoke() {
       document.getElementById('joke').innerText = "Loading...";
       const keyword = document.getElementById('keyword').value.trim();
 
       let url = `https://v2.jokeapi.dev/joke/${currentCategory}?blacklistFlags=nsfw,racist,sexist,explicit`;
-      if (useSearch && keyword) {
+      if (keyword) {
         url += `&contains=${encodeURIComponent(keyword)}`;
       }
 
@@ -121,8 +121,8 @@
         const response = await fetch(url);
         const data = await response.json();
 
-        if (data.error || (useSearch && data.message)) {
-          document.getElementById('joke').innerText = "No joke found for that. Try another word!";
+        if (data.error) {
+          document.getElementById('joke').innerText = "No joke found for that. Try another word or category!";
           return;
         }
 
