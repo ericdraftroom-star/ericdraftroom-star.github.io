@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Magic 8-Ball</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background: linear-gradient(135deg, #232526, #414345);
+      color: white;
+      text-align: center;
+      padding-top: 60px;
+      min-height: 100vh;
+      margin: 0;
+    }
+    h1 { font-size: 2.2em; }
+    #ball {
+      width: 220px;
+      height: 220px;
+      border-radius: 50%;
+      background: black;
+      margin: 40px auto;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 20px;
+      box-shadow: 0 0 30px rgba(255,255,255,0.2);
+    }
+    #answer {
+      color: white;
+      font-size: 1.1em;
+    }
+    input, button {
+      padding: 10px;
+      font-size: 1em;
+      margin-top: 10px;
+      border-radius: 8px;
+      border: none;
+    }
+    button {
+      cursor: pointer;
+      background: #667eea;
+      color: white;
+      margin-left: 5px;
+    }
+    a {
+      display: block;
+      margin-top: 30px;
+      color: #aaa;
+    }
+  </style>
+</head>
+<body>
+  <h1>🎱 Magic 8-Ball</h1>
+  <p>Ask a yes/no question and click Shake</p>
+
+  <input type="text" id="question" placeholder="Type your question...">
+  <button onclick="shake()">Shake</button>
+
+  <div id="ball">
+    <div id="answer">Ask me anything</div>
+  </div>
+
+  <a href="index.html">← Back to menu</a>
+
+  <script>
+    const answers = [
+      "It is certain",
+      "Without a doubt",
+      "Yes, definitely",
+      "You may rely on it",
+      "Ask again later",
+      "Cannot predict now",
+      "Don't count on it",
+      "My sources say no",
+      "Very doubtful",
+      "Outlook not so good"
+    ];
+
+    function shake() {
+      const random = answers[Math.floor(Math.random() * answers.length)];
+      document.getElementById("answer").innerText = random;
+    }
+  </script>
+</body>
+</html>
