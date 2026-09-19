@@ -8,15 +8,54 @@
       background: linear-gradient(135deg, #0f0f0f, #1c1c1c);
       color: #f0f0f0;
       text-align: center;
-      padding-top: 60px;
+      padding-top: 50px;
       min-height: 100vh;
       margin: 0;
     }
     h1 { font-size: 2.2em; }
+    .categories {
+      margin-top: 20px;
+    }
+    .categories button {
+      font-size: 1em;
+      background: #1e1e1e;
+      border: 2px solid #555;
+      color: white;
+      border-radius: 20px;
+      padding: 8px 18px;
+      margin: 5px;
+      cursor: pointer;
+      transition: 0.2s;
+    }
+    .categories button:hover, .categories button.active {
+      background: #f7b733;
+      color: #111;
+      border-color: #f7b733;
+    }
+    .search {
+      margin-top: 20px;
+    }
+    .search input {
+      padding: 10px;
+      font-size: 1em;
+      border-radius: 8px;
+      border: none;
+      width: 220px;
+    }
+    .search button {
+      padding: 10px 18px;
+      font-size: 1em;
+      border-radius: 8px;
+      border: none;
+      background: #f7b733;
+      color: #111;
+      cursor: pointer;
+      margin-left: 5px;
+    }
     #joke {
       max-width: 500px;
       margin: 40px auto;
-      font-size: 1.4em;
+      font-size: 1.3em;
       background: #1e1e1e;
       border: 2px solid #444;
       border-radius: 15px;
@@ -26,23 +65,9 @@
       align-items: center;
       justify-content: center;
     }
-    button {
-      font-size: 1.2em;
-      background: #1e1e1e;
-      border: 2px solid #f7b733;
-      color: white;
-      border-radius: 10px;
-      padding: 12px 25px;
-      cursor: pointer;
-      transition: 0.2s;
-    }
-    button:hover {
-      background: #f7b733;
-      color: #111;
-    }
     a {
       display: block;
-      margin-top: 30px;
+      margin-top: 20px;
       color: #999;
     }
     a:hover {
@@ -52,22 +77,62 @@
 </head>
 <body>
   <h1>😂 Joke Generator</h1>
-  <p>Click for a random joke (fetched live from the internet)</p>
+  <p>Pick a category, or search for a keyword</p>
+
+  <div class="categories">
+    <button class="cat active" data-cat="Any" onclick="setCategory('Any', this)">🎲 Any</button>
+    <button class="cat" data-cat="Programming" onclick="setCategory('Programming', this)">💻 Programming</button>
+    <button class="cat" data-cat="Pun" onclick="setCategory('Pun', this)">🎯 Puns</button>
+    <button class="cat" data-cat="Spooky" onclick="setCategory('Spooky', this)">👻 Spooky</button>
+    <button class="cat" data-cat="Christmas" onclick="setCategory('Christmas', this)">🎄 Christmas</button>
+    <button class="cat" data-cat="Misc" onclick="setCategory('Misc', this)">🎪 Misc</button>
+  </div>
+
+  <div class="search">
+    <input type="text" id="keyword" placeholder="Search a word e.g. cat, school">
+    <button onclick="tellJoke(true)">Search</button>
+  </div>
 
   <div id="joke">Ready when you are!</div>
-  <button onclick="tellJoke()">Tell me a joke</button>
+  <button onclick="tellJoke(false)" style="margin-top:10px; padding:12px 25px; font-size:1.1em; background:#1e1e1e; border:2px solid #f7b733; color:white; border-radius:10px; cursor:pointer;">🎲 Random Joke</button>
 
   <a href="index.html">← Back to menu</a>
 
   <script>
-    async function tellJoke() {
+    let currentCategory = "Any";
+
+    function setCategory(cat, btn) {
+      currentCategory = cat;
+      document.querySelectorAll('.cat').forEach(b => b.classList.remove('active'));
+      btn.classList.add('active');
+      tellJoke(false);
+    }
+
+    async function tellJoke(useSearch) {
       document.getElementById('joke').innerText = "Loading...";
+      const keyword = document.getElementById('keyword').value.trim();
+
+      let url = `https://v2.jokeapi.dev/joke/${currentCategory}?blacklistFlags=nsfw,racist,sexist,explicit`;
+      if (useSearch && keyword) {
+        url += `&contains=${encodeURIComponent(keyword)}`;
+      }
+
       try {
-        const response = await fetch("https://official-joke-api.appspot.com/random_joke");
+        const response = await fetch(url);
         const data = await response.json();
-        document.getElementById('joke').innerText = data.setup + " — " + data.punchline;
+
+        if (data.error || (useSearch && data.message)) {
+          document.getElementById('joke').innerText = "No joke found for that. Try another word!";
+          return;
+        }
+
+        if (data.type === "single") {
+          document.getElementById('joke').innerText = data.joke;
+        } else {
+          document.getElementById('joke').innerText = data.setup + " — " + data.delivery;
+        }
       } catch (error) {
-        document.getElementById('joke').innerText = "Oops, couldn't fetch a joke. Try again!";
+        document.getElementById('joke').innerText = "Oops, something went wrong. Try again!";
       }
     }
   </script>
