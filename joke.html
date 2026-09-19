@@ -13,9 +13,7 @@
       margin: 0;
     }
     h1 { font-size: 2.2em; }
-    .categories {
-      margin-top: 20px;
-    }
+    .categories { margin-top: 20px; }
     .categories button {
       font-size: 1em;
       background: #1e1e1e;
@@ -32,9 +30,7 @@
       color: #111;
       border-color: #f7b733;
     }
-    .search {
-      margin-top: 20px;
-    }
+    .search { margin-top: 20px; }
     .search input {
       padding: 10px;
       font-size: 1em;
@@ -65,27 +61,20 @@
       align-items: center;
       justify-content: center;
     }
-    a {
-      display: block;
-      margin-top: 20px;
-      color: #999;
-    }
-    a:hover {
-      color: #f7b733;
-    }
+    a { display: block; margin-top: 20px; color: #999; }
+    a:hover { color: #f7b733; }
   </style>
 </head>
 <body>
   <h1>😂 Joke Generator</h1>
-  <p>Pick a category, or type a keyword — either stays active until you change it</p>
+  <p>Pick a category, or search for a keyword</p>
 
   <div class="categories">
     <button class="cat active" data-cat="Any" onclick="setCategory('Any', this)">🎲 Any</button>
     <button class="cat" data-cat="Programming" onclick="setCategory('Programming', this)">💻 Programming</button>
-    <button class="cat" data-cat="Pun" onclick="setCategory('Pun', this)">🎯 Puns</button>
-    <button class="cat" data-cat="Spooky" onclick="setCategory('Spooky', this)">👻 Spooky</button>
-    <button class="cat" data-cat="Christmas" onclick="setCategory('Christmas', this)">🎄 Christmas</button>
-    <button class="cat" data-cat="Misc" onclick="setCategory('Misc', this)">🎪 Misc</button>
+    <button class="cat" data-cat="Animals" onclick="setCategory('Animals', this)">🐶 Animals</button>
+    <button class="cat" data-cat="School" onclick="setCategory('School', this)">🏫 School</button>
+    <button class="cat" data-cat="Food" onclick="setCategory('Food', this)">🍕 Food</button>
   </div>
 
   <div class="search">
@@ -99,6 +88,24 @@
   <a href="index.html">← Back to menu</a>
 
   <script>
+    const jokes = [
+      { text: "Why don't scientists trust atoms? Because they make up everything!", cat: "Any" },
+      { text: "Why do programmers prefer dark mode? Because light attracts bugs.", cat: "Programming" },
+      { text: "Why did the developer go broke? Because he used up all his cache.", cat: "Programming" },
+      { text: "A SQL query walks into a bar, walks up to two tables and asks: Can I join you?", cat: "Programming" },
+      { text: "Why don't skeletons fight each other? They don't have the guts.", cat: "Any" },
+      { text: "Why did the scarecrow win an award? Because he was outstanding in his field.", cat: "Any" },
+      { text: "Why do cats always win video games? Because they have nine lives.", cat: "Animals" },
+      { text: "What do you call a dog that can do magic? A labracadabrador.", cat: "Animals" },
+      { text: "Why did the cat sit on the computer? To keep an eye on the mouse.", cat: "Animals" },
+      { text: "Why was the math book sad at school? It had too many problems.", cat: "School" },
+      { text: "Why did the student eat his homework? Because the teacher said it was a piece of cake.", cat: "School" },
+      { text: "What did the classroom clock do when it was hungry? It went back four seconds.", cat: "School" },
+      { text: "Why did the pizza maker go out of business? He couldn't make enough dough.", cat: "Food" },
+      { text: "Why did the banana go to the doctor? It wasn't peeling well.", cat: "Food" },
+      { text: "I would tell you a joke about pizza, but it's a little cheesy.", cat: "Food" }
+    ];
+
     let currentCategory = "Any";
 
     function setCategory(cat, btn) {
@@ -108,32 +115,21 @@
       tellJoke();
     }
 
-    async function tellJoke() {
-      document.getElementById('joke').innerText = "Loading...";
-      const keyword = document.getElementById('keyword').value.trim();
+    function tellJoke() {
+      const keyword = document.getElementById('keyword').value.trim().toLowerCase();
 
-      let url = `https://v2.jokeapi.dev/joke/${currentCategory}?blacklistFlags=nsfw,racist,sexist,explicit`;
+      let pool = jokes.filter(j => currentCategory === "Any" || j.cat === currentCategory);
       if (keyword) {
-        url += `&contains=${encodeURIComponent(keyword)}`;
+        pool = pool.filter(j => j.text.toLowerCase().includes(keyword));
       }
 
-      try {
-        const response = await fetch(url);
-        const data = await response.json();
-
-        if (data.error) {
-          document.getElementById('joke').innerText = "No joke found for that. Try another word or category!";
-          return;
-        }
-
-        if (data.type === "single") {
-          document.getElementById('joke').innerText = data.joke;
-        } else {
-          document.getElementById('joke').innerText = data.setup + " — " + data.delivery;
-        }
-      } catch (error) {
-        document.getElementById('joke').innerText = "Oops, something went wrong. Try again!";
+      if (pool.length === 0) {
+        document.getElementById('joke').innerText = "No joke found for that. Try another word or category!";
+        return;
       }
+
+      const random = pool[Math.floor(Math.random() * pool.length)];
+      document.getElementById('joke').innerText = random.text;
     }
   </script>
 </body>
