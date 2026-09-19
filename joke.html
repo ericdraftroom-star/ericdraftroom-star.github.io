@@ -112,6 +112,7 @@
       currentCategory = cat;
       document.querySelectorAll('.cat').forEach(b => b.classList.remove('active'));
       btn.classList.add('active');
+      document.getElementById('keyword').value = "";
       tellJoke();
     }
 
